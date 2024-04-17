@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <title>Welcome | Barrel Treasure</title>
+      <link rel="shortcut icon" href="./favicon.ico">
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="../landing/css/main.css">
+      <link rel="stylesheet" href="../landing/css/theme.min.css">
+      <link href="css/font-awesome.min.css" rel="stylesheet">
+      <link href="css/font-awesome.css" rel="stylesheet">
+   </head>
+   <body class="d-flex align-items-center min-h-100 bg-dark">
+      <main id="content" role="main" class="flex-grow-1 overflow-hidden">
+         <div class="container content-space-t-1 content-space-b-2">
+            <div class="mx-lg-auto" style="max-width: 55rem;">
+               <div class="d-flex justify-content-center align-items-center flex-column min-vh-lg-100">
+                  <header id="header" class="navbar navbar-height navbar-light mb-3">
+                     <div class="container">
+                        <a class="navbar-brand mx-auto" href="/dashboard" aria-label="">
+                        <img class="navbar-brand-logo" src="../landing/img/logo.png" alt="Image Description">
+                        </a>
+                     </div>
+                  </header>
+                  <div class="position-relative">
+                     <div class="card card-shadow card-login">
+                        <div class="row">
+                           <div class="col-md-8">
+                              <div class="card-body">
+                                 <div class="text-center">
+                                    <div class="mb-5">
+                                       <h3 class="card-title">Login to Barrel Treasure</h3>
+                                    </div>
+                                 </div>
+                                 <form class="btn btn-white btn-lg d-grid mb-4" id="loginForm" method="POST" action="/auth/custom-login">
+                                    <div class="mb-4 form-group">
+                                       <input type="email" class="form-control" placeholder="Email" required="" name="email">
+                                    </div>
+                                    <div class="mb-4 form-group">
+                                       <input type="password" class="form-control" placeholder="Password" required="" name="password">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
+                                    <br>
+                                    <a class="btn btn-sm btn-white btn-block" href="register.html">Create an account</a>
+                                    <br>
+                                    <div class="mb-4 text-muted text-center">
+                                       <small>Forgot your password? <a href="/password_reset_request">Reset it here</a></small>
+                                    </div>
+                                 </form>
+                              </div>
+                           </div>
+                           <div class="col-md-4 d-md-flex justify-content-center flex-column bg-soft-danger p-8 p-md-5" style="background-image: url(../landing/svg/components/wave-pattern.svg);">
+                              <h5 class="mb-4">Effortlessly manage the storage and asset value of your wine collection</h5>
+                              <ul class="list-checked list-checked-primary list-py-2">
+                                 <li class="list-checked-item">Completely Free (No Payment Method Req)</li>
+                                 <li class="list-checked-item">Unlock Insights Into Your Existing Collection</li>
+                              </ul>
+                              <span class="d-block">
+                              <a class="link link-pointer" href="/register">Join For Free</a>
+                              </span>
+                           </div>
+                        </div>
+                     </div>
+                     <figure class="position-absolute top-0 end-0 zi-n1 d-none d-sm-block mt-n7 me-n10" style="width: 4rem;">
+                        <img class="img-fluid" src="../landing/svg/components/corkscrew.svg" alt="Image Description">
+                     </figure>
+                     <figure class="position-absolute bottom-0 start-0 d-none d-sm-block ms-n10 mb-n10" style="width: 15rem;">
+                        <img class="img-fluid" src="../landing/svg/components/curved-shape.svg" alt="Image Description">
+                     </figure>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </main>
+      <script src="../landing/js/vendor.min.js"></script>
+      <script src="../landing/js/main.js"></script>
+      <script>
+         (function() {
+           HSBsValidation.init('.js-validate', {
+             onSubmit: data => {
+               data.event.preventDefault()
+               alert('Submited')
+             }
+           })
+           new HSTogglePassword('.js-toggle-password')
+         })()
+      </script>
+   </body>
+</html>

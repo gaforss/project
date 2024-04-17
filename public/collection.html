@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Collection - Barrel Treasure</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/font-awesome.min.css" rel="stylesheet">
+        <link href="css/font-awesome.css" rel="stylesheet">
+        <link href="css/all.css" rel="stylesheet">
+        <link href="css/datatables.min.css" rel="stylesheet">
+        <link href="css/toastr.min.css" rel="stylesheet">
+        <link href="css/animate.css" rel="stylesheet">
+        <link href="css/main.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.6/metisMenu.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
+    </head>
+    <body>
+        <div id="wrapper">
+            <nav class="navbar-default navbar-static-side" role="navigation">
+                <div class="sidebar-collapse">
+                    <ul class="nav metismenu" id="side-menu">
+                        <li class="nav-header">
+                            <div class="dropdown profile-element">
+                                <img alt="Profile Image" class="rounded-circle" id="profileImageElement" />
+                                <a href="/dashboard">
+                                    <span class="block m-t-xs" id="firstnamePlaceholder"></span>
+                                </a>
+                            </div>
+                            <div class="logo-element"> BT </div>
+                        </li>
+                        <li>
+                            <a href="/dashboard">
+                                <i class="fa fa-home"></i>
+                                <span class="nav-label">Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-list-ul"></i> 
+                            <span class="nav-label">Manage Wine</span> <span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a href="/collection"><i class="fa fa-clock-o"></i> Collection</a></li>
+                                <li><a href="/history"><i class="fa fa-clock-o"></i> History</a></li>
+                                <li><a href="/pairmyfood"><i class="fa fa-clock-o"></i> Pair My Food</a></li>
+                                <li><a href="/cellarlocate"><i class="fa fa-location-arrow"></i> Cellar</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="/editprofile">
+                                <i class="fa fa-pencil"></i>
+                                <span class="nav-label">Edit Your Profile</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/importwine">
+                                <i class="fa fa-upload"></i>
+                                <span class="nav-label">Import Your Inventory</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/analytics">
+                                <i class="fa fa-pie-chart"></i>
+                                <span class="nav-label">Analytics</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/logout">
+                                <i class="fa fa-sign-out"></i>
+                                <span class="nav-label">Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div id="page-wrapper" class="white-bg dashbard-1">
+                <div class="row border-bottom">
+                    <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                        <div class="navbar-header">
+                            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#">
+                                <i class="fa fa-bars"></i>
+                            </a>
+                            <form role="search" class="navbar-form-custom" id="wineSearchForm" action="/wines/search" method="GET" autocomplete="off">
+                                <div class="form-group">
+                                    <input data-provide="typeahead" type="text" placeholder="Search Complete Wine List" class="form-control" id="searchInput">
+                                </div>
+                            </form>
+                        </div>
+                    </nav>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="wineList"></div>
+                    </div>
+                </div>
+                <div class="wrapper wrapper-content animated fadeInRight">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="ibox ">
+                                <div class="ibox-content" style="border: none;">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="wineTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <input type="checkbox" id="selectAllCheckbox">
+                                                    </th>
+                                                    <th>Name</th>
+                                                    <th>Price</th>
+                                                    <th>Year</th>
+                                                    <th>Winery</th>
+                                                    <th>Region</th>
+                                                    <th>Country</th>
+                                                    <th>Modify</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                    <button id="bulkDeleteBtn" class="btn btn-danger" style="margin: 15px;">
+                                        <i class="fa fa-check-square-o"></i> Delete Multiple Wines </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal for Wine Details -->
+                <div class="modal fade" id="wineDetailsModal" tabindex="-1" role="dialog" aria-labelledby="wineDetailsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="wineDetailsModalLabel">Wine Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row mb-3">
+                                    <div class="col-md-4 hero-image">
+                                        <img src="/img/hero/red.png" alt="Wine Image" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h3>
+                                            <span id="wineName"></span>
+                                        </h3>
+                                        <p>
+                                            <strong>Type:</strong>
+                                            <span id="wineType"></span>
+                                        </p>
+                                        <p>
+                                            <strong>Winery:</strong>
+                                            <span id="wineWinery"></span>
+                                        </p>
+                                        <p>
+                                            <strong>Region:</strong>
+                                            <span id="wineRegion"></span>
+                                        </p>
+                                        <p>
+                                            <strong>Country:</strong>
+                                            <span id="wineCountry"></span>
+                                            <span id="countryFlag"></span>
+                                        </p>
+                                        <p>
+                                            <strong>Drink Window:</strong> Fill In Your Vintage Below
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                                <h3>Pairings</h3>
+                                            </div>
+                                            <div class="col-md-3 col-3 pairing-image">
+                                                <img src="/img/pairings/salmon_and_tuna.png" alt="Pairing Image" />
+                                            </div>
+                                            <div class="col-md-3 col-3 pairing-image">
+                                                <img src="/img/pairings/pasta.png" alt="Pairing Image" />
+                                            </div>
+                                            <div class="col-md-3 col-3 pairing-image">
+                                                <img src="/img/pairings/mushrooms.png" alt="Pairing Image" />
+                                            </div>
+                                            <div class="col-md-3 col-3 pairing-image">
+                                                <img src="/img/pairings/vegetarian.png" alt="Pairing Image" />
+                                            </div>
+                                </div>
+                                <hr class="my-4">
+                                <div class="mb-3">
+                                    <h3>Edit Additional Details</h3>
+                                    <br>
+                                    <div class="form-group row">
+                                        <label for="winePrice" class="col-sm-2 col-form-label">Price</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="fa fa-usd"></i>
+                                                    </span>
+                                                </div>
+                                                <input type="number" id="winePrice" class="form-control" placeholder="">
+                                            </div>
+                                            <small class="form-text text-muted">Enter the price you paid, e.g., $20</small>
+                                        </div>
+                                    </div>
+                                    <hr class="my-4">
+                                    <div class="form-group row">
+                                        <label for="wineYear" class="col-sm-2 col-form-label">Vintage</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="fa fa-calendar"></i>
+                                                    </span>
+                                                </div>
+                                                <input type="number" id="wineYear" class="form-control" placeholder="">
+                                            </div>
+                                            <small class="form-text text-muted">Enter the vintage, e.g., 2020</small>
+                                        </div>
+                                    </div>
+                                    <hr class="my-4">
+                                    <div class="form-group row">
+                                        <label for="wineVarietal" class="col-sm-2 col-form-label">Varietal</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="fa fa-gratipay"></i>
+                                                    </span>
+                                                </div>
+                                                <select id="wineVarietal" class="form-control" placeholder="Cabernet Sauvignon">
+                                                    <option value="Chardonnay">Chardonnay</option>
+                                                    <option value="Cabernet Sauvignon">Cabernet Sauvignon</option>
+                                                    <option value="Merlot">Merlot</option>
+                                                    <option value="Pinot Noir">Pinot Noir</option>
+                                                    <option value="Syrah (Shiraz)">Syrah (Shiraz)</option>
+                                                    <option value="Sauvignon Blanc">Sauvignon Blanc</option>
+                                                    <option value="Zinfandel">Zinfandel</option>
+                                                    <option value="Sangiovese">Sangiovese</option>
+                                                    <option value="Riesling">Riesling</option>
+                                                    <option value="Malbec">Malbec</option>
+                                                    <option value="Tempranillo">Tempranillo</option>
+                                                    <option value="Grenache (Garnacha)">Grenache (Garnacha)</option>
+                                                    <option value="Pinot Grigio">Pinot Grigio</option>
+                                                    <option value="Pinot Gris">Pinot Gris</option>
+                                                    <option value="Nebbiolo">Nebbiolo</option>
+                                                    <option value="Gewürztraminer">Gewürztraminer</option>
+                                                    <option value="Chenin Blanc">Chenin Blanc</option>
+                                                    <option value="Mourvèdre">Mourvèdre</option>
+                                                    <option value="Vermentino">Vermentino</option>
+                                                    <option value="Viognier">Viognier</option>
+                                                    <option value="Nero d'Avola">Nero d'Avola</option>
+                                                    <option value="Grüner Veltliner">Grüner Veltliner</option>
+                                                    <option value="Barbera">Barbera</option>
+                                                    <option value="Carmenère">Carmenère</option>
+                                                    <option value="Semillon">Semillon</option>
+                                                    <option value="Albariño">Albariño</option>
+                                                    <option value="Muscat/Moscato">Muscat/Moscato</option>
+                                                    <option value="Cabernet Franc">Cabernet Franc</option>
+                                                    <option value="Petit Verdot">Petit Verdot</option>
+                                                    <option value="Gamay">Gamay</option>
+                                                    <option value="Petite Sirah (Durif)">Petite Sirah (Durif)</option>
+                                                    <option value="Tannat">Tannat</option>
+                                                    <option value="Torrontés">Torrontés</option>
+                                                    <option value="Marsanne">Marsanne</option>
+                                                    <option value="Roussanne">Roussanne</option>
+                                                    <option value="Garganega">Garganega</option>
+                                                    <option value="Montepulciano">Montepulciano</option>
+                                                    <option value="Red Blend">Red Blend</option>
+                                                    <option value="Bordeaux Blend">Bordeaux Blend</option>
+                                                </select>
+                                            </div>
+                                            <small class="form-text text-muted">Enter the variety, e.g., Merlot</small>
+                                        </div>
+                                    </div>
+                                    <hr class="my-4">
+                                    <div class="form-group row">
+                                        <label for="wineSize" class="col-sm-2 col-form-label">Size</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        <i class="fa fa-signal"></i>
+                                                    </span>
+                                                </div>
+                                                <select id="wineSize" class="form-control" placeholder="">
+                                                    <option value="750ml Standard">750ml Standard</option>
+                                                    <option value="187.5ml Split">187.5ml Split</option>
+                                                    <option value="375ml Half">375ml Half</option>
+                                                    <option value="1.5L Magnum">1.5L Magnum</option>
+                                                    <option value="3.0L Double Magnum">3.0L Double Magnum</option>
+                                                    <option value="4.5L Rehoboam">4.5L Rehoboam</option>
+                                                    <option value="6.0L Imperial">6.0L Imperial</option>
+                                                    <option value="9.0L Salmanazar">9.0L Salmanazar</option>
+                                                </select>
+                                            </div>
+                                            <small class="form-text text-muted">Enter the size, e.g., 750ml Standard</small>
+                                        </div>
+                                    </div>
+                                    <hr class="my-4">
+                                    <div class="form-group row">
+                                        <label for="wineQuantity" class="col-sm-2 col-form-label">Quantity</label>
+                                        <div class="col-sm-10">
+                                            <div class="input-group knob-wrapper">
+                                                <input type="text" id="wineQuantity" class="form-control knob knob-input" placeholder="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="addToCatalogBtn">Add to Collection</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Edit Existing Wine Modal -->
+                <div class="modal fade" id="editWineModal" tabindex="-1" role="dialog" aria-labelledby="editWineModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editWineModalLabel">Edit Wine Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editWineForm">
+                                    <div class="row mb-3">
+                                        <div class="col-md-4 hero-image">
+                                            <img src="/img/hero/red.png" alt="Wine Image" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <h3 id="editName"></h3>
+                                            <p>
+                                                <strong>Type:</strong>
+                                                <span id="editType"></span>
+                                            </p>
+                                            <p>
+                                                <strong>Winery:</strong>
+                                                <span id="editWinery"></span>
+                                            </p>
+                                            <p>
+                                                <strong>Region:</strong>
+                                                <span id="editRegion"></span>
+                                            </p>
+                                            <p>
+                                                <strong>Country:</strong>
+                                                <span id="editCountry"></span>
+                                            </p>
+                                            <p>
+                                                <strong>Drink Window:</strong>
+                                                <span id="wineDrinkWindow"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <hr class="my-4">
+                                    <div class="mb-3">
+                                        <div class="form-group row">
+                                            <label for="editPrice" class="col-sm-2 col-form-label">Price</label>
+                                            <div class="col-sm-10">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <i class="fa fa-usd"></i>
+                                                        </span>
+                                                    </div>
+                                                    <input type="number" id="editPrice" class="form-control" placeholder="">
+                                                </div>
+                                                <small class="form-text text-muted">Enter the price you paid, e.g., $20</small>
+                                            </div>
+                                        </div>
+                                        <hr class="my-4">
+                                        <div class="form-group row">
+                                            <label for="editYear" class="col-sm-2 col-form-label">Vintage</label>
+                                            <div class="col-sm-10">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                    <input type="number" id="editYear" class="form-control" placeholder="">
+                                                </div>
+                                                <small class="form-text text-muted">Enter the vintage, e.g., 2020</small>
+                                            </div>
+                                        </div>
+                                        <hr class="my-4">
+                                        <div class="form-group row">
+                                            <label for="editVarietal" class="col-sm-2 col-form-label">Varietal</label>
+                                            <div class="col-sm-10">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <i class="fa fa-gratipay"></i>
+                                                        </span>
+                                                    </div>
+                                                    <select id="editVarietal" class="form-control" placeholder="Cabernet Sauvignon">
+                                                        <option value="Chardonnay">Chardonnay</option>
+                                                        <option value="Cabernet Sauvignon">Cabernet Sauvignon</option>
+                                                        <option value="Merlot">Merlot</option>
+                                                        <option value="Pinot Noir">Pinot Noir</option>
+                                                        <option value="Syrah (Shiraz)">Syrah (Shiraz)</option>
+                                                        <option value="Sauvignon Blanc">Sauvignon Blanc</option>
+                                                        <option value="Zinfandel">Zinfandel</option>
+                                                        <option value="Sangiovese">Sangiovese</option>
+                                                        <option value="Riesling">Riesling</option>
+                                                        <option value="Malbec">Malbec</option>
+                                                        <option value="Tempranillo">Tempranillo</option>
+                                                        <option value="Grenache (Garnacha)">Grenache (Garnacha)</option>
+                                                        <option value="Pinot Grigio">Pinot Grigio</option>
+                                                        <option value="Pinot Gris">Pinot Gris</option>
+                                                        <option value="Nebbiolo">Nebbiolo</option>
+                                                        <option value="Gewürztraminer">Gewürztraminer</option>
+                                                        <option value="Chenin Blanc">Chenin Blanc</option>
+                                                        <option value="Mourvèdre">Mourvèdre</option>
+                                                        <option value="Vermentino">Vermentino</option>
+                                                        <option value="Viognier">Viognier</option>
+                                                        <option value="Nero d'Avola">Nero d'Avola</option>
+                                                        <option value="Grüner Veltliner">Grüner Veltliner</option>
+                                                        <option value="Barbera">Barbera</option>
+                                                        <option value="Carmenère">Carmenère</option>
+                                                        <option value="Semillon">Semillon</option>
+                                                        <option value="Albariño">Albariño</option>
+                                                        <option value="Muscat/Moscato">Muscat/Moscato</option>
+                                                        <option value="Cabernet Franc">Cabernet Franc</option>
+                                                        <option value="Petit Verdot">Petit Verdot</option>
+                                                        <option value="Gamay">Gamay</option>
+                                                        <option value="Petite Sirah (Durif)">Petite Sirah (Durif)</option>
+                                                        <option value="Tannat">Tannat</option>
+                                                        <option value="Torrontés">Torrontés</option>
+                                                        <option value="Marsanne">Marsanne</option>
+                                                        <option value="Roussanne">Roussanne</option>
+                                                        <option value="Garganega">Garganega</option>
+                                                        <option value="Montepulciano">Montepulciano</option>
+                                                        <option value="Red Blend">Red Blend</option>
+                                                        <option value="Bordeaux Blend">Bordeaux Blend</option>
+                                                    </select>
+                                                </div>
+                                                <small class="form-text text-muted">Enter the variety, e.g., Merlot</small>
+                                            </div>
+                                        </div>
+                                        <hr class="my-4">
+                                        <div class="form-group row">
+                                            <label for="editSize" class="col-sm-2 col-form-label">Size</label>
+                                            <div class="col-sm-10">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                            <i class="fa fa-signal"></i>
+                                                        </span>
+                                                    </div>
+                                                    <select id="editSize" class="form-control" placeholder="">
+                                                        <option value="750ml Standard">750ml Standard</option>
+                                                        <option value="187.5ml Split">187.5ml Split</option>
+                                                        <option value="375ml Half">375ml Half</option>
+                                                        <option value="1.5L Magnum">1.5L Magnum</option>
+                                                        <option value="3.0L Double Magnum">3.0L Double Magnum</option>
+                                                        <option value="4.5L Rehoboam">4.5L Rehoboam</option>
+                                                        <option value="6.0L Imperial">6.0L Imperial</option>
+                                                        <option value="9.0L Salmanazar">9.0L Salmanazar</option>
+                                                    </select>
+                                                </div>
+                                                <small class="form-text text-muted">Enter the size, e.g., 750ml Standard</small>
+                                            </div>
+                                        </div>
+                                        <hr class="my-4">
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <h3>Pairings</h3>
+                                            </div>
+                                            <div class="col-md-3 col-3 pairing-image">
+                                                <img src="/img/pairings/salmon_and_tuna.png" alt="Pairing Image" />
+                                            </div>
+                                            <div class="col-md-3 col-3 pairing-image">
+                                                <img src="/img/pairings/pasta.png" alt="Pairing Image" />
+                                            </div>
+                                            <div class="col-md-3 col-3 pairing-image">
+                                                <img src="/img/pairings/mushrooms.png" alt="Pairing Image" />
+                                            </div>
+                                            <div class="col-md-3 col-3 pairing-image">
+                                                <img src="/img/pairings/vegetarian.png" alt="Pairing Image" />
+                                            </div>
+                                        </div>
+                                        <div class="mb-3" style="padding-top: 10px;">
+                                            <div class="tabs-container">
+                                                <ul class="nav nav-tabs" role="tablist">
+                                                    <li><a class="nav-link active" data-toggle="tab" href="#tab-location">Wine Location</a></li>
+                                                    <li><a class="nav-link" data-toggle="tab" href="#tab-consumed">Mark as Consumed</a></li>
+                                                </ul>
+                                                <div class="tab-content">
+                                                    <div role="tabpanel" id="tab-location" class="tab-pane active">
+                                                        <div class="panel-body">
+                                                            <h4>Enter Wine Location In Your Cellar (Opt.) <a href="/cellarlocate" style="text-decoration: none; color: inherit;"><i class="fa fa-window-restore"></i></a></h4>
+                                                            <br>
+                                                            <div class="form-group row">
+                                                                <label for="editRow" class="col-sm-2 col-form-label">Row</label>
+                                                                <div class="col-sm-10">
+                                                                    <div class="input-group">
+                                                                        <div class="input-group-prepend">
+                                                                            <span class="input-group-text"><i class="fa fa-arrows-h"></i></span>
+                                                                        </div>
+                                                                        <input type="text" id="editRow" class="form-control" placeholder="">
+                                                                    </div>
+                                                                    <small class="form-text text-muted">Enter the row from left to right, e.g., A, B</small>
+                                                                </div>
+                                                            </div>
+                                                            <hr class="my-4">
+                                                            <div class="form-group row">
+                                                                <label for="editHeight" class="col-sm-2 col-form-label">Height</label>
+                                                                <div class="col-sm-10">
+                                                                    <div class="input-group">
+                                                                        <div class="input-group-prepend">
+                                                                            <span class="input-group-text"><i class="fa fa-arrows-v"></i></span>
+                                                                        </div>
+                                                                        <input type="number" id="editHeight" class="form-control" placeholder="">
+                                                                    </div>
+                                                                    <small class="form-text text-muted">Enter the height starting from the top, e.g., 1, 2</small>
+                                                                </div>
+                                                            </div>
+                                                            <hr class="my-4">
+                                                            <div class="form-group row">
+                                                                <label for="editDepth" class="col-sm-2 col-form-label">Depth</label>
+                                                                <div class="col-sm-10">
+                                                                    <div class="input-group">
+                                                                        <div class="input-group-prepend">
+                                                                            <span class="input-group-text"><i class="fa fa-map-marker"></i></span>
+                                                                        </div>
+                                                                        <input type="number" id="editDepth" class="form-control" placeholder="">
+                                                                    </div>
+                                                                    <small class="form-text text-muted">Enter the depth, e.g., 2</small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div role="tabpanel" id="tab-consumed" class="tab-pane">
+                                                        <div class="panel-body">
+                                                            <form id="consumptionForm">
+                                                                <div class="form-group row">
+                                                                    <label class="font-normal">Date Consumed:</label>
+                                                                    <div class="input-group date">
+                                                                        <div class="input-group-prepend">
+                                                                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                                                        </div>
+                                                                        <input type="text" id="dateConsumed" name="dateConsumed" class="form-control" value="02/04/2024">
+                                                                    </div>
+                                                                </div>
+                                                                <hr class="my-4">
+                                                                <div class="form-group row">
+                                                                    <label class="font-normal" for="liked">Liked</label>
+                                                                    <div class="input-group">
+                                                                        <div class="onoffswitch">
+                                                                            <input type="checkbox" checked class="onoffswitch-checkbox" id="liked" name="liked">
+                                                                            <label class="onoffswitch-label" for="liked">
+                                                                                <span class="onoffswitch-inner"></span>
+                                                                                <span class="onoffswitch-switch"></span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <hr class="my-4">
+                                                                <div class="form-group row">
+                                                                    <button type="button" id="markAsConsumedBtn" class="btn btn-primary">Mark as Consumed</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal-->
+            </div>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.6/metisMenu.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/jquery.knob/1.2.13/jquery.knob.min.js"></script>
+            <script src="js/datatables.min.js"></script>
+            <script src="js/dataTables.bootstrap4.min.js"></script>
+            <script src="js/minimize.js"></script>
+            <script src="js/custom.js"></script>
+            <script src="js/bootstrap.js"></script>
+            <script>
+                $(document).ready(function() {
+                    $(".knob").knob({
+                        'min': 0,
+                        'max': 18,
+                        'step': 1,
+                        'width': 180,
+                        'height': 180,
+                        'fgColor': "#944444",
+                        'displayInput': true
+                    });
+                    $(".knob").val(1).trigger('change');
+
+                    $(document).ready(function() {
+                        $('#side-menu').metisMenu();
+                    });
+                });
+            </script>
+    </body>
+</html>

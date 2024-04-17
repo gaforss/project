@@ -1,0 +1,416 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Your Cellar - Barrel Treasure</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/font-awesome.min.css" rel="stylesheet">
+        <link href="css/font-awesome.css" rel="stylesheet">
+        <link href="css/all.css" rel="stylesheet">
+        <link href="css/datatables.min.css" rel="stylesheet">
+        <link href="css/toastr.min.css" rel="stylesheet">
+        <link href="css/animate.css" rel="stylesheet">
+        <link href="css/main.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.6/metisMenu.min.css" rel="stylesheet">
+        <style>
+            .cell {
+                width: 80px;
+                height: 80px;
+                border: 2px solid #242e36;
+                border-radius: 15px;
+                text-align: center;
+                color: #e8e8e8;
+                line-height: 1.5;
+                padding: 4px;
+                font-size: 9px;
+                overflow: hidden;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Lighter shadow */
+                position: relative;
+                background-color: #293846 !important; /* Updated background color with !important */
+            }
+
+            .cell:hover {
+                transform: scale(1.08);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            }
+
+            .cell::before {
+                content: ''; /* Pseudo-element for dynamic wine type image */
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 100%;
+                height: 100%; /* Display only the top half of the image */
+                background-repeat: no-repeat;
+                background-size: contain; /* Maintain the aspect ratio of the image */
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Shadow for the image */
+            }
+
+            #cellar-container {
+                display: grid;
+                grid-template-columns: repeat(25, 80px);
+                grid-template-rows: repeat(25, 80px);
+                gap: 4px;
+                max-width: 100%;
+                overflow-x: auto;
+                background-color: #293846;
+                border-radius: 8px;
+                padding: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="wrapper">
+            <nav class="navbar-default navbar-static-side" role="navigation">
+                <div class="sidebar-collapse">
+                    <ul class="nav metismenu" id="side-menu">
+                        <li class="nav-header">
+                            <div class="dropdown profile-element">
+                                <img alt="Profile Image" class="rounded-circle" id="profileImageElement" />
+                                <a href="/dashboard">
+                                    <span class="block m-t-xs" id="firstnamePlaceholder"></span>
+                                </a>
+                            </div>
+                            <div class="logo-element"> BT </div>
+                        </li>
+                        <li>
+                            <a href="/dashboard">
+                                <i class="fa fa-home"></i>
+                                <span class="nav-label">Dashboard</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-list-ul"></i> 
+                            <span class="nav-label">Manage Wine</span> <span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a href="/collection"><i class="fa fa-clock-o"></i> Collection</a></li>
+                                <li><a href="/history"><i class="fa fa-clock-o"></i> History</a></li>
+                                <li><a href="/pairmyfood"><i class="fa fa-clock-o"></i> Pair My Food</a></li>
+                                <li><a href="/cellarlocate"><i class="fa fa-location-arrow"></i> Cellar</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="/editprofile">
+                                <i class="fa fa-pencil"></i>
+                                <span class="nav-label">Edit Your Profile</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/importwine">
+                                <i class="fa fa-upload"></i>
+                                <span class="nav-label">Import Your Inventory</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/analytics">
+                                <i class="fa fa-pie-chart"></i>
+                                <span class="nav-label">Analytics</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/logout">
+                                <i class="fa fa-sign-out"></i>
+                                <span class="nav-label">Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+        <div id="page-wrapper" class="white-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                    </div>
+                </nav>
+            </div>
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-10">
+                    <h2>Your Cellar</h2>
+                </div>
+            </div>
+
+            <div class="wrapper wrapper-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p>Highlighting Your Wine Locations Within Your <a href="/collection" style="text-decoration: none; color: inherit;"><b>Collection</b> <i class="fa fa-list-ul"></i></a></p>
+                        <div id="cellar-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.6/metisMenu.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/interactjs@1.10.11/dist/interact.min.js"></script>
+        <script src="js/datatables.min.js"></script>
+        <script src="js/dataTables.bootstrap4.min.js"></script>
+        <script src="js/custom.js"></script>
+        <script src="js/minimize.js"></script>
+        <script src="js/bootstrap.js"></script>
+        <script type="text/javascript">
+            const convertNumberToRow = (number) => {
+                return String.fromCharCode(number + 64);
+            };
+
+            const convertRowToNumber = (row) => {
+                const uppercaseRow = row.toUpperCase();
+                return uppercaseRow.charCodeAt(0) - 64;
+            };
+
+            const calculateDestinationIndex = (event) => {
+                const cellWidth = 80;
+                const cellHeight = 80;
+
+                const offsetX = event.clientX - event.target.getBoundingClientRect().left;
+                const offsetY = event.clientY - event.target.getBoundingClientRect().top;
+
+                const colIndex = Math.min(Math.floor(offsetX / cellWidth), 24);
+                const rowIndex = Math.min(Math.floor(offsetY / cellHeight), 24);
+
+                const destinationIndex = rowIndex * 25 + colIndex;
+
+                return destinationIndex;
+            };
+
+            const fetchCellarData = async () => {
+                try {
+                    const response = await axios.get('/wines/cellar-data');
+                    return response.data;
+                } catch (error) {
+                    console.error('Error fetching cellar data:', error);
+                    return null;
+                }
+            };
+
+            const updateCellarVisualization = async () => {
+                try {
+                    const cellarArray = await fetchCellarData();
+                    const cellarContainer = document.getElementById('cellar-container');
+
+                    cellarContainer.innerHTML = '';
+
+                    if (Array.isArray(cellarArray)) {
+                        const structuredLayout = Array.from({ length: 25 }, () => Array(25).fill(null));
+
+                        cellarArray.forEach((wine) => {
+                            const { row, height, depth } = wine;
+                            const rowIndex = convertRowToNumber(row) - 1;
+
+                            if (row && height && depth && rowIndex >= 0 && rowIndex < 25 && height > 0 && height <= 25 && depth > 0 && depth <= 25) {
+                                structuredLayout[rowIndex][height - 1] = wine;
+                            } else {
+                                console.warn(`Invalid position for wine ${wine.name} at Row: ${row}, Height: ${height}, Depth: ${depth}`);
+                            }
+                        });
+
+                        for (let colIndex = 0; colIndex < 25; colIndex++) {
+                            for (let rowIndex = 0; rowIndex < 25; rowIndex++) {
+                                const wine = structuredLayout[rowIndex][colIndex];
+                                const cell = document.createElement('div');
+                                cell.classList.add('cell');
+
+                                if (wine) {
+                                    const firstFourWords = wine.name.split(/\s+/).slice(0, 4).join(' ');
+                                    cell.textContent = `${wine.year} ${firstFourWords}`;
+                                    cell.style.backgroundImage = `url(${getWineImage(wine.type)})`;
+                                    cell.style.backgroundSize = '25%';
+                                    cell.style.backgroundRepeat = 'no-repeat';
+
+                                    const firstFourWordsPosition = wine.name.split(/\s+/).slice(0, 4).join(' ');
+                                    const positionText = `Row ${convertNumberToRow(rowIndex + 1)}, Height ${colIndex + 1}, Depth ${wine.depth}, Wine: ${firstFourWordsPosition}`;
+                                    cell.setAttribute('title', positionText);
+                                } else {
+                                    const positionText = `Row ${convertNumberToRow(rowIndex + 1)}, Height ${colIndex + 1}`;
+                                    cell.textContent = positionText;
+                                    cell.style.backgroundColor = '#f0f0f0';
+                                }
+
+                                const dragHandle = document.createElement('div');
+                                dragHandle.classList.add('drag-handle');
+                                cell.appendChild(dragHandle);
+
+                                cell.setAttribute('data-id', rowIndex * 25 + colIndex);
+
+                                cellarContainer.appendChild(cell);
+                            }
+                        }
+
+                        initializeDraggable();
+                    } else {
+                        console.error('Invalid cellar data received from the server.');
+                    }
+                } catch (error) {
+                    console.error('Error updating cellar visualization:', error);
+                }
+            };
+
+            const getWineImage = (type) => {
+                switch (type.toLowerCase()) {
+                    case 'red':
+                        return '/img/hero/red.png';
+                    case 'white':
+                        return '/img/hero/white.png';
+                    case 'rose':
+                        return '/img/hero/rose.png';
+                    default:
+                        return '/img/hero/default.png';
+                }
+            };
+
+            const getWineColor = (type) => {
+                switch (type.toLowerCase()) {
+                    case 'red':
+                        return '#ff0000';
+                    case 'white':
+                        return '#ffff00';
+                    case 'rose':
+                        return '#ffc0cb';
+                    default:
+                        return '#d3d3d3';
+                }
+            };
+
+            // Update the position of a wine using AJAX
+            const updateWinePosition = async (sourceIndex, destinationIndex, wineId, row, height, depth) => {
+                try {
+                    // Validate input parameters
+                    if (
+                      isNaN(numericSourceIndex) ||
+                      isNaN(numericDestinationIndex) ||
+                      numericSourceIndex < 0 ||
+                      numericDestinationIndex < 0 ||
+                      typeof row !== 'string' ||
+                      typeof height !== 'number' ||
+                      typeof depth !== 'number'
+                    ) {
+                      return res.status(400).json({ error: 'Invalid input parameters' });
+                    }
+
+                    const delta = destinationIndex - sourceIndex; // Calculate the correct delta
+
+                    const response = await axios.put('/wines/update-position', {
+                        sourceIndex,
+                        destinationIndex,
+                        wineId,
+                        row,
+                        height,
+                        depth,
+                        delta, // Include the correct delta in the request
+                    }, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+                    // Log success and update visualization
+                    console.log('Position updated successfully:', response.data);
+                    updateCellarVisualization();
+                } catch (error) {
+                    // Log and handle errors
+                    console.error('Error updating position:', error.response ? error.response.data : error.message);
+                    // Display an alert, handle the error, or perform other error-handling actions
+                }
+            };
+
+            const initializeDraggable = () => {
+                interact('.cell').draggable({
+                    snap: {
+                        targets: [interact.createSnapGrid({ x: 80, y: 80 })],
+                        range: Infinity,
+                        relativePoints: [{ x: 0.5, y: 0.5 }],
+                    },
+                    onstart: (event) => {
+                        console.log('Drag Start Event:', event);
+                    },
+                    onmove: (event) => {
+                        console.log('Move Event:', event);
+
+                        const target = event.target;
+                        const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                        const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                        const snappedX = Math.round(x / 80) * 80;
+                        const snappedY = Math.round(y / 80) * 80;
+
+                        target.style.transform = `translate(${snappedX}px, ${snappedY}px)`;
+                        target.setAttribute('data-x', snappedX);
+                        target.setAttribute('data-y', snappedY);
+
+                        const offsetX = Math.max(event.clientX - event.target.getBoundingClientRect().left, 0);
+                        const offsetY = Math.max(event.clientY - event.target.getBoundingClientRect().top, 0);
+
+                        const colIndex = Math.floor(offsetX / 80);
+                        const rowIndex = Math.floor(offsetY / 80);
+
+                        const destinationIndex = rowIndex * 25 + colIndex;
+
+                        console.log('Interactable Object:', event._interaction.interactable);
+                        console.log('Interaction Coordinates:', event._interaction.coords.cur);
+                    },
+                    onend: async (event) => {
+                        const wineRowInput = document.getElementById('wineRow');
+                        const wineHeightInput = document.getElementById('wineHeight');
+                        const wineDepthInput = document.getElementById('wineDepth');
+
+                        // Ensure the input fields are available before proceeding
+                        if (wineRowInput && wineHeightInput && wineDepthInput) {
+                            // These variables need to be declared before logging
+                            const sourceIndex = parseInt(event.target.getAttribute('data-id'), 10);
+                            const offsetX = parseFloat(event.target.getAttribute('data-x')) || 0;
+                            const offsetY = parseFloat(event.target.getAttribute('data-y')) || 0;
+
+                            // Calculate the destination index based on the adjusted offsets
+                            const destinationIndex = calculateDestinationIndex({
+                                clientX: event.clientX - offsetX,
+                                clientY: event.clientY - offsetY,
+                                target: event.target,
+                            });
+
+                            const wineId = getWineIdForCell(event.target);
+                            const row = event.target.getAttribute('data-row');
+                            const height = event.target.getAttribute('data-height');
+                            const depth = event.target.getAttribute('data-depth');
+
+                            // Log the values after they have been declared and initialized
+                            console.log('Source Index:', sourceIndex);
+                            console.log('Destination Index:', destinationIndex);
+                            console.log('Wine ID:', wineId);
+                            console.log('Row:', row);
+                            console.log('Height:', height);
+                            console.log('Depth:', depth);
+
+                            try {
+                              // Now you can proceed with updating the position
+                              updateWinePosition(sourceIndex, destinationIndex, wineId, row, height, depth);
+                           } catch (error) {
+                              console.error('Error updating position:', error);
+                           }
+
+                            // Reset the translation attributes
+                            target.style.transform = '';
+                            target.setAttribute('data-x', 0);
+                            target.setAttribute('data-y', 0);
+                        }
+                    },
+                });
+            };
+
+            const getWineIdForCell = (cell) => {
+                return cell.getAttribute('data-wine-id');
+            };
+
+            updateCellarVisualization();
+
+            $(document).ready(function() {
+                $('#side-menu').metisMenu();
+            });
+        </script>
+    </body>
+</html>

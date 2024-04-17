@@ -1,0 +1,486 @@
+ <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Your Cellar - Barrel Treasure</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/font-awesome.css" rel="stylesheet">
+    <link href="css/all.css" rel="stylesheet">
+    <link href="css/datatables.min.css" rel="stylesheet">
+    <link href="css/toastr.min.css" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/ion.rangeSlider.css" rel="stylesheet">
+    <link href="css/jquery.steps.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.6/metisMenu.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="wrapper">
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+                            <img alt="Profile Image" class="rounded-circle" id="profileImageElement" />
+                            <a href="/dashboard">
+                                <span class="block m-t-xs" id="firstnamePlaceholder"></span>
+                            </a>
+                        </div>
+                        <div class="logo-element"> BT </div>
+                    </li>
+                    <li>
+                        <a href="/dashboard">
+                            <i class="fa fa-home"></i>
+                            <span class="nav-label">Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-list-ul"></i> 
+                        <span class="nav-label">Manage Wine</span> <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="/collection"><i class="fa fa-clock-o"></i> Collection</a></li>
+                            <li><a href="/history"><i class="fa fa-clock-o"></i> History</a></li>
+                            <li><a href="/pairmyfood"><i class="fa fa-clock-o"></i> Pair My Food</a></li>
+                            <li><a href="/cellarlocate"><i class="fa fa-location-arrow"></i> Cellar</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/editprofile">
+                            <i class="fa fa-pencil"></i>
+                            <span class="nav-label">Edit Your Profile</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/importwine">
+                            <i class="fa fa-upload"></i>
+                            <span class="nav-label">Import Your Inventory</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/analytics">
+                            <i class="fa fa-pie-chart"></i>
+                            <span class="nav-label">Analytics</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/logout">
+                            <i class="fa fa-sign-out"></i>
+                            <span class="nav-label">Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="white-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+                    </div>
+                </nav>
+            </div>
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-10">
+                    <h2>Planning to Cook? Let's Pair A Wine From Your Collection</h2>
+                </div>
+            </div>
+
+            <div class="wrapper wrapper-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="ibox ">
+                            <div class="ibox-content">
+                                <!-- Wizard -->
+                                <div id="wizard">
+                                    <!-- Step 1: Choose Food Type -->
+                                    <h1>Choose Food Type</h1>
+                                    <div class="step-content">
+                                        <div class="row">
+                                            <!-- Meat category -->
+                                            <div class="col-lg-4">
+                                                <div class="ibox-content">
+                                                    <a class="row select-food-group" href="#" data-food-group="meat">
+                                                        <div class="col-12">
+                                                            <div class="text-center">
+                                                                <img alt="Meat" class="rounded-circle m-t-xs img-fluid" src="img//pairings/beef.png">
+                                                                <div class="m-t-xs font-bold">Meat</div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!-- Seafood category -->
+                                            <div class="col-lg-4">
+                                                <div class="ibox-content">
+                                                    <a class="row select-food-group" href="#" data-food-group="seafood">
+                                                        <div class="col-12">
+                                                            <div class="text-center">
+                                                                <img alt="Seafood" class="rounded-circle m-t-xs img-fluid" src="img/pairings/salmon_and_tuna.png">
+                                                                <div class="m-t-xs font-bold">Seafood</div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!-- Vegetables category -->
+                                            <div class="col-lg-4">
+                                                <div class="ibox-content">
+                                                    <a class="row select-food-group" href="#" data-food-group="vegetables">
+                                                        <div class="col-12">
+                                                            <div class="text-center">
+                                                                <img alt="Vegetables" class="rounded-circle m-t-xs img-fluid" src="img/pairings/vegetarian.png">
+                                                                <div class="m-t-xs font-bold">Vegetables</div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!-- Cheese category -->
+                                            <div class="col-lg-4">
+                                                <div class="ibox-content">
+                                                    <a class="row select-food-group" href="#" data-food-group="cheese">
+                                                        <div class="col-12">
+                                                            <div class="text-center">
+                                                                <img alt="Cheese" class="rounded-circle m-t-xs img-fluid" src="img/pairings/mature_and_hard_cheese.png">
+                                                                <div class="m-t-xs font-bold">Cheese</div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!-- Pasta category -->
+                                            <div class="col-lg-4">
+                                                <div class="ibox-content">
+                                                    <a class="row select-food-group" href="#" data-food-group="pasta">
+                                                        <div class="col-12">
+                                                            <div class="text-center">
+                                                                <img alt="Pasta" class="rounded-circle m-t-xs img-fluid" src="img/pairings/pasta.png">
+                                                                <div class="m-t-xs font-bold">Pasta</div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!-- Dessert category -->
+                                            <div class="col-lg-4">
+                                                <div class="ibox-content">
+                                                    <a class="row select-food-group" href="#" data-food-group="dessert">
+                                                        <div class="col-12">
+                                                            <div class="text-center">
+                                                                <img alt="Dessert" class="rounded-circle m-t-xs img-fluid" src="img/pairings/dessert.png">
+                                                                <div class="m-t-xs font-bold">Dessert</div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Choose Specific Food -->
+                                    <h1>Choose Specific Food</h1>
+                                    <div class="step-content"></div>
+
+                                    <!-- Additional details -->
+                                    <h1>Cooking Style</h1>
+                                    <div class="step-content">
+                                        <div class="form-group">
+                                            <label for="additionalDetails">Additional Details</label>
+                                            <input type="text" id="additionalDetails" class="form-control" placeholder="Enter additional details">
+                                        </div>
+                                    </div>
+
+                                    <!-- Choose Price Range -->
+                                    <h1>Choose Price Range</h1>
+                                    <div class="step-content">
+                                        <div class="form-group">
+                                            <label for="priceRange">Price Range</label>
+                                            <input id="ionrange_1"/>
+                                        </div>
+                                    </div>
+
+                                    <!-- Wine Pairing -->
+                                    <h1>Wine Pairing</h1>
+                                    <div class="step-content">
+                                        <div class="text-center m-t-md">
+                                            <h2>Recommended Wines</h2>
+                                            <ul id="recommendedWines" class="list-group"></ul>
+                                            <button id="pairWinesBtn" class="btn btn-primary">Pair Wines</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.6/metisMenu.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/jquery.steps.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/interactjs@1.10.11/dist/interact.min.js"></script>
+    <script src="js/datatables.min.js"></script>
+    <script src="js/dataTables.bootstrap4.min.js"></script>
+    <script src="js/custom.js"></script>
+    <script src="js/ion.rangeSlider.min.js"></script>
+    <script src="js/minimize.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#side-menu').metisMenu();
+        });
+    </script>
+    <script>
+            // Check if the user is authenticated
+            var isAuthenticated = true; // Implement logic to check if the user is authenticated
+
+            // Function to initialize the wizard with the user ID
+            function initializeWizard(userId) {
+                console.log("User ID:", userId);
+
+                // Initialize wizard steps plugin
+                $("#wizard").steps({
+                    onStepChanging: function(event, currentIndex, newIndex) {
+                        // Validate current step before proceeding to the next step
+                        if (currentIndex === 0) {
+                            // Validate food type selection
+                            if (!$(".select-food-group.selected").length) {
+                                // Display error message if no food category is selected
+                                toastr.error("Please select a food category.");
+                                return false; // Prevent moving to the next step
+                            }
+                        } else if (currentIndex === 3) {
+                            // Validate price range selection
+                            var priceRange = $("#ionrange_1").val();
+                            console.log("Price range selected: " + priceRange);
+                            if (priceRange < 0 || priceRange > 1000) {
+                                // Display error message if price range is invalid
+                                toastr.error("Please select a valid price range.");
+                                return false; // Prevent moving to the next step
+                            }
+                        }
+                        return true; // Allow moving to the next step
+                    }
+                });
+
+                // Initialize Ion Range Slider for price range selection
+                $("#ionrange_1").ionRangeSlider({
+                    type: "single",
+                    min: 5,
+                    max: 700,
+                    step: 1,
+                    grid: true,
+                    onFinish: function(data) {
+                        // Update UI with selected price range
+                        console.log("Price range selected: " + data.from);
+                        $("#priceOutput").text(data.from);
+                    }
+                });
+
+                // Handle food category selection using event delegation
+                $("#wizard").on('click', '.select-food-group', function(e) {
+                    e.preventDefault();
+                    console.log("Food category selected");
+                    // Update UI to reflect selected food category
+                    $(".select-food-group").removeClass("selected");
+                    $(this).addClass("selected");
+                    // Move to the next step in the wizard
+                    $("#wizard").steps('next');
+                    // Populate specific food options and flavor profiles based on the selected food category
+                    var foodGroup = $(this).data("food-group");
+                    populateSpecificFoods(foodGroup);
+                    populateFlavorProfiles(foodGroup);
+                });
+            }
+
+            // Function to handle the Pair Wines button click event
+            function handlePairWinesClick(userId) {
+                console.log("Pair wines button clicked");
+                console.log("userId:", userId); // Check if userId is accessible here
+                var foodType = $(".select-food-group.selected").data("food-group");
+                var specificFood = $("input[name='specificFood']:checked").val();
+                var flavorProfile = $("input[name='flavorProfile']:checked").val();
+                var priceRange = $("#ionrange_1").val();
+
+                // Perform AJAX request to fetch wine pairing
+                $.ajax({
+                    url: '/wines/pair-my-food',
+                    method: 'POST',
+                    data: { 
+                        userId: userId,
+                        foodType: foodType, 
+                        specificFood: specificFood, 
+                        flavorProfile: flavorProfile, 
+                        priceRange: priceRange 
+                    },
+                    success: function(response) {
+                        console.log("Wine pairing successful");
+                        // Display recommended wines
+                        var $recommendedWines = $("#recommendedWines");
+                        $recommendedWines.empty(); // Clear previous content
+                        if (response.length > 0) {
+                            response.forEach(function(wine) {
+                                $recommendedWines.append("<li class='list-group-item'>" + wine.name + "</li>");
+                            });
+                        } else {
+                            $recommendedWines.html("<li class='list-group-item text-info'>No wines found matching the criteria.</li>");
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                        console.log("Failed to fetch wine pairing. Please try again later.");
+                        // Display error message if wine pairing lookup fails
+                        $("#recommendedWines").html("<li class='list-group-item text-danger'>Failed to fetch wine pairing. Please try again later.</li>");
+                    }
+                });
+            }
+
+            // Check if the user is authenticated
+            if (isAuthenticated) {
+                // If the user is authenticated, obtain the user ID and initialize the wizard
+                $.ajax({
+                    url: '/login',
+                    method: 'POST',
+                    data: {},
+                    success: function(response) {
+                        console.log("User ID:", response.userId); // Log user ID
+                        initializeWizard(response.userId); // Call initializeWizard function here
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error fetching user ID:", error); // Log error
+                        // Handle error condition (e.g., display error message to the user)
+                        // You might still want to initialize the wizard even if user ID retrieval fails
+                        initializeWizard(null); // Initialize wizard with null user ID
+                    }
+                });
+            } else {
+                // If the user is not authenticated, initialize the wizard with null user ID
+                initializeWizard(null);
+            }
+
+            // Bind click event to Pair Wines button
+            $("#pairWinesBtn").on('click', function() {
+                // If the user is authenticated, obtain the user ID and handle the Pair Wines button click event
+                if (isAuthenticated) {
+                    $.ajax({
+                        url: '/login',
+                        method: 'POST',
+                        data: {},
+                        success: function(response) {
+                            var userId = response.userId; // Get the userId from the AJAX response
+                            handlePairWinesClick(userId); // Call handlePairWinesClick function with the user ID
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error fetching user ID:", error); // Log error
+                            // Handle error condition (e.g., display error message to the user)
+                        }
+                    });
+                } else {
+                    // If the user is not authenticated, handle the Pair Wines button click event with null user ID
+                    handlePairWinesClick(null);
+                }
+            });
+
+            // Function to populate specific food options based on the selected food category
+            function populateSpecificFoods(foodGroup) {
+                var specificFoods = [];
+                console.log("Populating specific foods for " + foodGroup);
+                switch (foodGroup) {
+                    case "meat":
+                        // List of meat options
+                        specificFoods = ["Beef", "Venison", "Lamb", "Veal", "Poultry", "Pork", "Duck", "Chicken", "Turkey", "Bison"];
+                        break;
+                    case "seafood":
+                        // List of seafood options
+                        specificFoods = ["Salmon", "Tuna", "Shrimp", "Lobster", "Crab", "Scallops", "Mussels", "Oysters", "Cod", "Sardines"];
+                        break;
+                    case "pasta":
+                        // List of pasta options
+                        specificFoods = ["Spaghetti", "Fettuccine", "Ravioli", "Lasagna", "Penne", "Carbonara", "Macaroni", "Gnocchi", "Tagliatelle", "Orzo"];
+                        break;
+                    case "vegetables":
+                        // List of vegetable options
+                        specificFoods = ["Broccoli", "Carrots", "Spinach", "Asparagus", "Bell Peppers", "Zucchini", "Cauliflower", "Kale", "Brussels Sprouts", "Sweet Potatoes"];
+                        break;
+                    case "cheese":
+                        // List of cheese options
+                        specificFoods = ["Cheddar", "Gouda", "Brie", "Blue Cheese", "Parmesan", "Mozzarella", "Feta", "Camembert", "Goat Cheese", "Havarti"];
+                        break;
+                    case "dessert":
+                        // List of dessert options
+                        specificFoods = ["Chocolate Cake", "Cheesecake", "Apple Pie", "Tiramisu", "Ice Cream", "Brownies", "Cupcakes", "Pudding", "Cookies", "Creme Brulee"];
+                        break;
+                }
+                var $specificFoodContent = $(".step-content").eq(1); // Select the step content for specific foods
+                $specificFoodContent.empty(); // Clear previous content
+                specificFoods.forEach(function(food) {
+                    var $foodOption = $("<div>").addClass("form-check").append(
+                        $("<input>").addClass("form-check-input").attr({
+                            type: "radio",
+                            name: "specificFood",
+                            id: food.toLowerCase(),
+                            value: food.toLowerCase()
+                        }),
+                        $("<label>").addClass("form-check-label").attr("for", food.toLowerCase()).text(food)
+                    );
+                    $specificFoodContent.append($foodOption);
+                });
+            }
+
+            // Function to populate flavor profiles based on the selected food category
+            function populateFlavorProfiles(foodGroup) {
+                var flavorProfiles = [];
+                console.log("Populating flavor profiles for " + foodGroup);
+                switch (foodGroup) {
+                    case "meat":
+                        // List of flavor profiles for meat
+                        flavorProfiles = ["Spicy", "Savory (Mushrooms or Truffles)", "Sweet (Cream or Tomato-based sauces)", "Tangy", "Smoky", "Herbaceous"];
+                        break;
+                    case "seafood":
+                        // List of flavor profiles for seafood
+                        flavorProfiles = ["Spicy", "Savory (Garlic or Butter)", "Sweet (Citrus-based sauces)", "Briny", "Fresh", "Umami"];
+                        break;
+                    case "pasta":
+                        // List of flavor profiles for pasta
+                        flavorProfiles = ["Spicy", "Savory (Creamy or Cheesy)", "Sweet (Cream or Alfredo or Tomato-based or Pesto sauces)", "Garlicky", "Buttery", "Nutty"];
+                        break;
+                    case "vegetables":
+                        // List of flavor profiles for vegetables
+                        flavorProfiles = ["Crunchy", "Earthy", "Savory (Garlic or Herbs)", "Sweet (Roasted)", "Bitter", "Sour"];
+                        break;
+                    case "cheese":
+                        // List of flavor profiles for cheese
+                        flavorProfiles = ["Sharp", "Creamy", "Nutty", "Salty", "Fruity", "Mild", "Tangy", "Smoky", "Pungent", "Herbaceous"];
+                        break;
+                    case "dessert":
+                        // List of flavor profiles for dessert
+                        flavorProfiles = ["Rich", "Decadent", "Fruity", "Creamy", "Chocolaty", "Citrusy", "Buttery", "Nutty", "Spicy", "Tart"];
+                        break;
+                    // Add cases for other food categories as needed
+                }
+                var $flavorProfileContent = $(".step-content").eq(2);
+                $flavorProfileContent.empty(); // Clear previous content
+                flavorProfiles.forEach(function(profile) {
+                    var $profileOption = $("<div>").addClass("form-check").append(
+                        $("<input>").addClass("form-check-input").attr({
+                            type: "radio",
+                            name: "flavorProfile",
+                            id: profile.toLowerCase(),
+                            value: profile.toLowerCase()
+                        }),
+                        $("<label>").addClass("form-check-label").attr("for", profile.toLowerCase()).text(profile)
+                    );
+                    $flavorProfileContent.append($profileOption);
+                });
+            }
+
+            
+    </script>
+</body>
+</html>
